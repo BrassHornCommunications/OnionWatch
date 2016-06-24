@@ -1,0 +1,90 @@
+{{define "subscribe-relay"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RelayWatch - Subscribe to Relay Monitoring</title>
+</head>
+<body>
+<h1>Subscribe to Alerts from Relay {{.Fingerprint}} {{.NickName}}</h1>
+<h2>Last Seen: {{.LastSeen}}</h2>
+<form action="/subscribe/" method="POST">
+Email: <input type="email" name="email"/><br/>
+GPG Key: <textarea name="gpg" col="40" rows="20"></textarea><br/>
+Insistent Alerts: <input type="checkbox" name="alerts" value="insistent" /><br/>
+<br/>
+<input type="submit" value="Subscribe to Alerts" />
+<input type="hidden" value="{{.Fingerprint}}" name="fingerprint"/>
+<input type="hidden" value="relay" name="type"/>
+</form>
+</body>
+{{end}}
+
+{{define "subscribe-hs"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RelayWatch - Subscribe to Hidden Service Monitoring</title>
+</head>
+<body>
+<h1>Subscribe to Alerts for hidden service {{.HSAddr}}</h1>
+<form action="/subscribe/" method="POST">
+Email: <input type="email" name="email"/><br/>
+GPG Key: <textarea name="gpg" col="40" rows="20"></textarea><br/>
+Insistent Alerts: <input type="checkbox" name="alerts" value="insistent" /><br/>
+<br/>
+<input type="submit" value="Subscribe to Alerts" />
+<input type="hidden" value="{{.HSAddr}}" name="hiddenservice"/>
+<input type="hidden" value="hs" name="type"/>
+</form>
+</body>
+{{end}}
+
+
+
+{{define "subscribed"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Subscribed to RelayWatch! Check your email</title>
+</head>
+<body>
+Sanity Checks passed.<br/>
+Please check your email for an activiation URL.<br/><br/>
+You will not receive email notifications till your email address is validated.
+</body>
+{{end}}
+
+{{define "verified"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Email Verification Complete</title>
+</head>
+<body>
+Sanity Checks passed.<br/>
+Your email address is now subscribed to alerts for the chosen relay<br/><br/>
+</body>
+{{end}}
+
+
+
+//---------------------------------------------
+// ERRORS
+
+{{define "error"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Subscription Error</title>
+</head>
+<body>
+<h1>Something went wrong</h1><br/>
+We're not sure what...<br/><br/>
+</body>
+{{end}}
+
