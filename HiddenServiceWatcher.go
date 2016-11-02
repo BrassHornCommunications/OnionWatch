@@ -73,7 +73,7 @@ func NotifyHSWatcher(email, gpgkey, hs string, isUp bool) error {
 
 	smtpErr := smtp.SendMail(SMTP_HOST, nil, "OnionWatch <notification@onionwatch.email>", to, msg)
 
-	return nil
+	return smtpErr
 }
 
 func FetchHS(url string) (bool, error) {
