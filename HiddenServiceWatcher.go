@@ -7,6 +7,7 @@ import (
 	//"io/ioutil"
 	"log"
 	"net/http"
+	"net/smtp"
 	"strconv"
 	"time"
 )
@@ -35,7 +36,7 @@ func HSWatcher(db *bolt.DB) {
 								log.Println(hsFetchErr)
 							}
 
-							notifyErr := NotifyHSWatcher(hsWatch.ContactEmail, hsWatch.GPGKey, hs.HSDetails.HSAddr, false)
+							notifyErr := NotifyHSWatcher(hsWatch.ContactEmail, hsWatch.GPGKey, hsWatch.HSDetails.HSAddr, false)
 
 							if notifyErr == nil {
 								log.Println("HS | Notificiation sent successfully")
