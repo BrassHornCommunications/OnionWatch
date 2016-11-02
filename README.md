@@ -1,5 +1,7 @@
 # OnionWatch - nionyn
 
+[![Build Status](https://drone.io/github.com/BrassHornCommunications/OnionWatch/status.png)](https://drone.io/github.com/BrassHornCommunications/OnionWatch/latest)
+
 ## How it works
 
 Every hour we scan the Onionoo database for relays that users are monitoring. If a relay or Hidden Service goes offline we send an *(optionally GPG encrypted)* email to inform you.
