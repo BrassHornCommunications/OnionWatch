@@ -2,11 +2,11 @@ package main
 
 import (
 	//"html/template"
-	"encoding/json"
+	//"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/boltdb/bolt"
-	"io/ioutil"
+	//"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -24,10 +24,20 @@ const (
 func main() {
 	log.Println("---------------------------------------------")
 
+	var conf CoreConf
+
 	//Grab all our command line config
-	configuration := flag.String("conf", "", "path to configuration file")
+	flag.StringVar(&conf.DbPath, "dbpath", "", "path to the bolt database")
+	flag.StringVar(&conf.ListenIP, "listenip", "127.0.0.1", "IPv4 address to listen on")
+	flag.StringVar(&conf.ListenIPv6, "listenipv6", "::1", "IPv4 address to listen on")
+	flag.Int64Var(&conf.ListenPort, "port", 8080, "IP port to bind on")
+	flag.StringVar(&conf.SOCKSConfig, "socks", "127.0.0.1:9150", "SOCKS IP:Port to use (optional)")
+	flag.StringVar(&conf.FQDN, "fqdn", "onionwatch.email", "FQDN for absolute URLs etc")
 	flag.Parse()
-	conf := readConfig(*configuration)
+
+	if conf.DbPath == "" {
+		log.Fatal("At a minimum please specify the database path with -dbpath. See -h for full command line argument list.")
+	}
 
 	//We need a DB for holding Relay / email details
 	db, err := bolt.Open(conf.DbPath, 0600, nil)
@@ -83,53 +93,4 @@ func main() {
 	} else {
 		http.ListenAndServe(":"+ListenPort, nil)
 	}
-}
-
-// Reads our JSON formatted config file
-// and returns a struct
-func readConfig(filename string) CoreConf {
-	var conf CoreConf
-
-	if filename == "" {
-		conf.DbPath = "./nionyn.bolt"
-		conf.ListenIP = "127.0.0.1"
-		conf.ListenIPv6 = "::1"
-		conf.ListenPort = 8080
-		conf.SOCKSConfig = "127.0.0.1:9150"
-		conf.FQDN = "onionwatch.email"
-	} else {
-		b, err := ioutil.ReadFile(filename)
-		if err != nil {
-			log.Fatal("Cannot read configuration file ", filename)
-		}
-		err = json.Unmarshal(b, &conf)
-		if err != nil {
-			log.Fatal("Cannot parse configuration file ", filename)
-		}
-
-		if conf.DbPath == "" {
-			conf.DbPath = "./nionyn.bolt"
-		}
-
-		if conf.ListenIP == "" {
-			conf.ListenIP = "127.0.0.1"
-		}
-
-		if conf.ListenIPv6 == "" {
-			conf.ListenIPv6 = "::1"
-		}
-
-		if conf.ListenPort == 0 {
-			conf.ListenPort = 8080
-		}
-
-		if conf.SOCKSConfig == "" {
-			conf.SOCKSConfig = "127.0.0.1:9150"
-		}
-
-		if conf.FQDN == "" {
-			conf.FQDN = "onionwatch.email"
-		}
-	}
-	return conf
 }
